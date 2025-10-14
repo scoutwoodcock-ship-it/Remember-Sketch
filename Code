@@ -1,0 +1,74 @@
+ArrayList<PVector> points = new ArrayList<PVector>();
+
+void setup() {
+  size(800, 600);
+  background(255);
+  println("Drag mouse to draw.");
+  println();
+}
+
+void draw() {
+  
+}
+
+void mouseDragged() {
+
+  PVector p = new PVector(mouseX, mouseY);
+  points.add(p);
+  fill(0);
+  noStroke();
+  ellipse(p.x, p.y, 5, 5);
+}
+
+void keyPressed() {
+  if (key == 's' || key == 'S') {
+    savePointsToCSV();
+  } else if (key == 'r' || key == 'R') {
+    resetCanvasAndPoints();
+  } else if (key == 'l' || key == 'L') {
+    drawPointsFromArrayList();
+  } else if (key == 'c' || key == 'C') {
+    loadPointsFromCSV();
+  }
+}
+
+void savePointsToCSV() {
+  PrintWriter writer = createWriter("mouse_points.csv");
+  for (PVector p : points) {
+    writer.println(p.x + "," + p.y);
+  }
+  writer.flush();
+  writer.close();
+  println("Points saved to mouse_points.csv");
+}
+
+void resetCanvasAndPoints() {
+  background(255);
+  points.clear();
+  println("Canvas and data reset.");
+}
+
+void drawPointsFromArrayList() {
+  background(255);
+  fill(0);
+  noStroke();
+  for (PVector p : points) {
+    ellipse(p.x, p.y, 5, 5);
+  }
+  println("Points redrawn from memory.");
+}
+
+void loadPointsFromCSV() {
+  String[] lines = loadStrings("mouse_points.csv");
+  points.clear();
+  background(255);
+  for (String line : lines) {
+    String[] coords = split(line, ',');
+    float x = float(coords[0]);
+    float y = float(coords[1]);
+    PVector p = new PVector(x, y);
+    points.add(p);
+    ellipse(x, y, 5, 5);
+  }
+  println("Points loaded and drawn from CSV.");
+}
